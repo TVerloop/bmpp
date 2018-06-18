@@ -45,7 +45,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG")
 set(CMAKE_C_FLAGS_RELEASE   "-DNDEBUG")
 set(CMAKE_ASM_FLAGS_RELEASE "-DNDEBUG")
     
-set(CMAKE_EXECUTABLE_SUFFIX ".elf" CACHE INTERNAL "Elf executable suffix.")
 #==============================================================================#
 # EOF
 #==============================================================================#
