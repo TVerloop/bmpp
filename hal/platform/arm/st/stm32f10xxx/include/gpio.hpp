@@ -31,8 +31,6 @@ private:
     Pin::State Impl_get_pin_state(const uint8_t& pin) const;
     uint32_t Impl_get_identifier() const;
 
-private:
-    
     Memory_register<Access_policy::read_write> crl;
     Memory_register<Access_policy::read_write> crh;
     Memory_register<Access_policy::read_only>  idr;
@@ -63,6 +61,7 @@ constexpr Gpio::Gpio(const uint32_t & address) :
 } /* namespace stm32f10xxx */
 
 using Pinset = stm32f10xxx::Gpio;
+using Pin = Pinset::Pin;
 
 constexpr Pinset gpio_a(Pinset::base_address + (Pinset::block_size * 0x00UL));
 constexpr Pinset gpio_b(Pinset::base_address + (Pinset::block_size * 0x01UL));

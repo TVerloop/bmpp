@@ -1,3 +1,4 @@
+/* -*- mode: c++-mode */
 /**
    @file main.cpp
    @author T. Verloop <t93.verloop@gmail.com>
@@ -26,15 +27,17 @@ int main() {
 
     auto pin = gpio_a[5];
 
-    pin.config(Pinset::Pin::Config::output_pushpull);
+    pin.config(Pin::Config::output_pushpull);
+
     while(true) {
 
-        pin.set(Pinset::Pin::State::high);
+        pin.set(Pin::State::high);
+
         for(volatile uint32_t i = 0; i < 100000; i++) {
             // Wait a bit.
         }
 
-        pin.set(Pinset::Pin::State::low);
+        pin.set(Pin::State::low);
 
         for(volatile uint32_t i = 0; i < 100000; i++) {
             // Wait a bit.
