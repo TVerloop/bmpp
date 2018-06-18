@@ -8,7 +8,7 @@
 # Bare Metal Plus Plus
 #
 #==============================================================================#
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.0)
 
 project(BMPP
   VERSION
@@ -18,6 +18,9 @@ project(BMPP
     CXX     # C++ language.
     ASM     # Assembler language.
 )
+
+# always export compile commands database,
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Enable testing.
 enable_testing()

@@ -60,8 +60,6 @@ if(CORTEX_M3_AVAILABLE)
         1k
       CORTEX_M3_PROCESS_STACK_SIZE
         0
-        CXX_CLANG_TIDY
-        clang-tidy;-checks=*;-warnings-as-errors
   )
 
   # include directories.
