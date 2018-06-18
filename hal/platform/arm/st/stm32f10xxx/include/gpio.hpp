@@ -39,9 +39,9 @@ private:
     Memory_register<Access_policy::write_only> brr;
     Memory_register<Access_policy::read_write> lckr;
 
-
     const uint32_t address;
 
+    static const uint32_t pin_count = 15UL;
 };
 
 
@@ -56,7 +56,6 @@ constexpr Gpio::Gpio(const uint32_t & address) :
     address (address) {
 
 }
-
 
 } /* namespace stm32f10xxx */
 

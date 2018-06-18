@@ -12,7 +12,6 @@
 
 /* System. */
 #include <cstdint>          /* Fixed size integers.     */
-#include <array>
 
 /* Third-party. */
 
@@ -30,7 +29,7 @@ namespace hal {
  */
 template<class Pinset_impl>
 class Pin_base {
-public:    
+public:
 
     /**
      *  Pin configurations.
@@ -56,7 +55,7 @@ public:
      *  @param[in]  pinset  Pinset of which this pin belongs to.
      *  @param[in]  pin_nr  The pin number which this pin is in the set.
      */
-    Pin_base(const Pinset_impl & pinset, const uint8_t& pin_nr);
+    constexpr Pin_base(const Pinset_impl & pinset, const uint8_t& pin_nr);
 
     /**
      *  Configures pin for given configuration.
@@ -103,17 +102,17 @@ public:
      *  returns a pin object for a given pin number.
      *  @param[in]  pin Number of the pin to return.
      */
-    Pin get_pin(const uint8_t& pin) const;
+    constexpr Pin get_pin(const uint8_t& pin) const;
 
     /**
      *  returns a pin object for a given pin number.
      *  @param[in]  pin Number of the pin to return.
      */
-    Pin operator[](const std::size_t& pin) const;
+    constexpr Pin operator[](const std::size_t& pin) const;
 
 private:
 
-    const Pinset_impl& derived() const;
+    constexpr const Pinset_impl& derived() const;
 
 };
 
@@ -126,7 +125,7 @@ private:
 /*----------------------------------------------------------------------------*/
 
 template<class T>
-Pin_base<T>::Pin_base(const T& pinset, const uint8_t& pin_nr) :
+constexpr Pin_base<T>::Pin_base(const T& pinset, const uint8_t& pin_nr) :
     pinset   {pinset},
     pin_nr   {pin_nr} {}
 
@@ -155,17 +154,17 @@ void Pinset_base<T>::initialize() const {
 }
 
 template<class T>
-Pin_base<T> Pinset_base<T>::get_pin(const uint8_t& pin) const {
+constexpr Pin_base<T> Pinset_base<T>::get_pin(const uint8_t& pin) const {
     return Pin(derived(), pin);
 }
 
 template<class T>
-Pin_base<T> Pinset_base<T>::operator[](const std::size_t& pin) const {
+constexpr Pin_base<T> Pinset_base<T>::operator[](const std::size_t& pin) const {
     return Pin(derived(), pin);
 }
 
 template<class T>
-const T& Pinset_base<T>::derived() const {
+constexpr const T& Pinset_base<T>::derived() const {
     return *static_cast<const T*>(this);
 }
 
