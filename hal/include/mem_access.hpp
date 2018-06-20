@@ -44,6 +44,14 @@ inline uint32_t masked_write(const uint32_t lhs, const uint32_t& field, const ui
     return ((lhs & ~(field << pos)) | ((rhs & field) << pos));
 }
 
+constexpr uint32_t create_mask(const std::size_t& size) {
+    if(!(size > 0UL)) {
+        return 0UL;
+    } else {
+        return 1UL | (create_mask(size - 1UL) << 1UL);
+    }
+}
+
 /**
  *  wrapper class for staticaly mapped Memory access.
  *  @tparam  Policy  Access policy.
@@ -51,12 +59,12 @@ inline uint32_t masked_write(const uint32_t lhs, const uint32_t& field, const ui
 template<Access_policy Policy>
 class Memory_register {
 public:
-    
+
     /**
      *  Constructor from 32bits integer.
      *  @param[in] address   Integer representative of the Memory address.
      */
-    constexpr Memory_register(uint32_t address);
+    explicit constexpr Memory_register(uint32_t address);
 
     /**
      *  Constructor from 32bits integer with aditional offset.
@@ -70,7 +78,6 @@ public:
 /*****************************************************************************/
   
     /** 
-     *  @{
      *  Assignment operator.
      *  @tparam      T   Type of righthand value.
      *  @param[in]   rhs righthand value.
@@ -78,13 +85,8 @@ public:
      */
     template<typename T>
     inline const Memory_register& operator=(const T& rhs) const;
-    inline const Memory_register& operator=(const Memory_register& rhs) const;
-    /** 
-     *  @}
-     */
 
     /**
-     *  @{
      *  Add and assign operator.
      *  @tparam      T   Type of righthand value.
      *  @param[in]   rhs Righthand value.
@@ -92,13 +94,7 @@ public:
      */
     template<typename T>
     inline const Memory_register& operator+=(const T& rhs) const;
-    inline const Memory_register& operator+=(const Memory_register& rhs) const;
     /**
-     *  @}
-     */
-
-    /**
-     *  @{
      *  Substract and assign operator.
      *  @tparam      T   Type of righthand value.
      *  @param[in]   rhs Righthand value.
@@ -106,13 +102,8 @@ public:
      */
     template<typename T>
     inline const Memory_register& operator-=(const T& rhs) const;
-    inline const Memory_register& operator-=(const Memory_register& rhs) const;
-    /**
-     * @}
-     */
 
     /**
-     *  @{
      *  Multiply and assign operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -120,13 +111,8 @@ public:
      */
     template<typename T>
     inline const Memory_register& operator*=(const T& rhs) const;
-    inline const Memory_register& operator*=(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Devide and assign operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -134,13 +120,8 @@ public:
      */
     template<typename T>
     inline const Memory_register& operator/=(const T& rhs) const;
-    inline const Memory_register& operator/=(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Modulo and assign operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -148,13 +129,8 @@ public:
      */
     template<typename T>
     inline const Memory_register& operator%=(const T& rhs) const;
-    inline const Memory_register& operator%=(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Bitwise AND and assign operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -162,13 +138,8 @@ public:
      */
     template<typename T>
     inline const Memory_register& operator&=(const T& rhs) const;
-    inline const Memory_register& operator&=(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Bitwise OR and assign operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -176,13 +147,8 @@ public:
      */
     template<typename T>
     inline const Memory_register& operator|=(const T& rhs) const;
-    inline const Memory_register& operator|=(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Bitwise XOR and assign operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -190,13 +156,8 @@ public:
      */
     template<typename T>
     inline const Memory_register& operator^=(const T& rhs) const;
-    inline const Memory_register& operator^=(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Leftshift and assign operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -204,13 +165,8 @@ public:
      */
     template<typename T>
     inline const Memory_register& operator<<=(const T& rhs) const;
-    inline const Memory_register& operator<<=(const Memory_register & rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Rightshift and assign operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -218,10 +174,6 @@ public:
      */
     template<typename T>
     inline const Memory_register& operator>>=(const T& rhs) const;
-    inline const Memory_register& operator>>=(const Memory_register & rhs) const;
-    /**
-     *  @}
-     */
 
 /*****************************************************************************/
 /* In-/De-crement operators                                                  */
@@ -256,7 +208,6 @@ public:
 /*****************************************************************************/
 
     /**
-     *  @{
      *  Addition operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -264,13 +215,8 @@ public:
      */
     template<typename T>
     inline uint32_t operator+(const T& rhs) const;
-    inline uint32_t operator+(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Substraction operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -278,13 +224,8 @@ public:
      */
     template<typename T>
     inline uint32_t operator-(const T& rhs) const;
-    inline uint32_t operator-(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Multiplication operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -292,13 +233,8 @@ public:
      */
     template<typename T>
     inline uint32_t operator*(const T& rhs) const;
-    inline uint32_t operator*(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Devision operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -306,13 +242,8 @@ public:
      */
     template<typename T>
     inline uint32_t operator/(const T& rhs) const;
-    inline uint32_t operator/(const Memory_register& rhs) const;
+
     /**
-     *  @}
-     */
-    
-    /**
-     *  @{
      *  Modulo operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -320,10 +251,6 @@ public:
      */
     template<typename T>
     inline uint32_t operator%(const T& rhs) const;
-    inline uint32_t operator%(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
      *  Bitwise NOT operator.
@@ -332,7 +259,6 @@ public:
     inline uint32_t operator~() const;
 
     /**
-     *  @{
      *  Bitwise AND operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -340,13 +266,8 @@ public:
      */
     template<typename T>
     inline uint32_t operator&(const T& rhs) const;
-    inline uint32_t operator&(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Bitwise OR operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -354,13 +275,8 @@ public:
      */
     template<typename T>
     inline uint32_t operator|(const T& rhs) const;
-    inline uint32_t operator|(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Bitwise XOR operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -368,13 +284,8 @@ public:
      */
     template<typename T>
     inline uint32_t operator^(const T& rhs) const;
-    inline uint32_t operator^(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Bitwise left shift operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -382,13 +293,8 @@ public:
      */
     template<typename T>
     inline uint32_t operator<<(const T& rhs) const;
-    inline uint32_t operator<<(const Memory_register& rhs) const;
+
     /**
-     *  @}
-     */
-    
-    /**
-     *  @{
      *  Bitwise right shift operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -396,10 +302,6 @@ public:
      */
     template<typename T>
     inline uint32_t operator>>(const T& rhs) const;
-    inline uint32_t operator>>(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
 /*****************************************************************************/
 /* Logical operators                                                         */
@@ -412,7 +314,6 @@ public:
     inline bool operator!() const;
 
     /**
-     *  @{
      *  Logical AND operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -420,13 +321,8 @@ public:
      */
     template<typename T>
     inline bool operator&&(const T& rhs) const;
-    inline bool operator&&(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Logical Includive OR operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -434,17 +330,12 @@ public:
      */
     template<typename T>
     inline bool operator||(const T& rhs) const;
-    inline bool operator||(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
 /*****************************************************************************/
 /* Comparison operators                                                      */
 /*****************************************************************************/
 
     /**
-     *  @{
      *  Equality operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -452,13 +343,8 @@ public:
      */
     template<typename T>
     inline bool operator==(const T& rhs) const;
-    inline bool operator==(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Not equality operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -466,13 +352,8 @@ public:
      */
     template<typename T>
     inline bool operator!=(const T& rhs) const;
-    inline bool operator!=(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Less than operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -480,13 +361,8 @@ public:
      */
     template<typename T>
     inline bool operator<(const T& rhs) const;
-    inline bool operator<(const Memory_register& rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Greater than operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -494,13 +370,8 @@ public:
      */
     template<typename T>
     inline bool operator>(const T& rhs) const;
-    inline bool operator>(const Memory_register & rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Less than or uqual operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -508,13 +379,8 @@ public:
      */
     template<typename T>
     inline bool operator<=(const T& rhs) const;
-    inline bool operator<=(const Memory_register & rhs) const;
-    /**
-     *  @}
-     */
 
     /**
-     *  @{
      *  Greater than or uqual operator.
      *  @tparam     T   Type of righthand value.
      *  @param[in]  rhs Righthand value.
@@ -522,10 +388,6 @@ public:
      */
     template<typename T>
     inline bool operator>=(const T& rhs) const;
-    inline bool operator>=(const Memory_register & rhs) const;
-    /**
-     *  @}
-     */
 
 /*****************************************************************************/
 /* Member access operators                                                   */
@@ -543,6 +405,7 @@ public:
 /* Conversion operators                                                      */
 /*****************************************************************************/
 
+
     /**
      *  Implicit conversion to volatile 32bit unsigned reference operator.
      *  @return         Pointer to memory register.
@@ -550,6 +413,7 @@ public:
     inline operator volatile uint32_t&() const {
         return get_reference();
     }
+
 private:
 
     uint32_t address;   /**< Memory address which the object wraps. */
@@ -571,403 +435,247 @@ private:
 /* Definitions.                                                               */
 /******************************************************************************/
 
-template<Access_policy Policy>
-constexpr Memory_register<Policy>::Memory_register(uint32_t address)
+template<Access_policy P>
+constexpr Memory_register<P>::Memory_register(uint32_t address)
     : address { address } {
 
 }
 
-template<Access_policy Policy>
-constexpr Memory_register<Policy>::Memory_register(uint32_t base_address, uint32_t offset)
+template<Access_policy P>
+constexpr Memory_register<P>::Memory_register(uint32_t base_address, uint32_t offset)
     : address { base_address + offset } {
 
 }
 
 
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-const Memory_register<Policy>& Memory_register<Policy>::operator=(const T& rhs) const {
+const Memory_register<P>& Memory_register<P>::operator=(const T& rhs) const {
     get_reference() = rhs;
     return *this;
 }
 
-template<Access_policy Policy>
-inline const Memory_register<Policy> & Memory_register<Policy>::operator=(const Memory_register<Policy>& rhs) const {
-    get_reference() = rhs.get_reference();
-    return *this;
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator+=(const T& rhs) const {
+inline const Memory_register<P>& Memory_register<P>::operator+=(const T& rhs) const {
     get_reference() += rhs;
     return *this;
 }
 
-template<Access_policy Policy>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator+=(const Memory_register<Policy>& rhs) const {
-    get_reference() += rhs.get_reference();
-    return *this;
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator-=(const T& rhs) const {
+inline const Memory_register<P>& Memory_register<P>::operator-=(const T& rhs) const {
     get_reference() -= rhs;
     return *this;
 }
 
-template<Access_policy Policy>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator-=(const Memory_register<Policy>& rhs) const {
-    get_reference() -= rhs.get_reference();
-    return *this;
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator*=(const T& rhs) const {
+inline const Memory_register<P>& Memory_register<P>::operator*=(const T& rhs) const {
     get_reference() *= rhs;
     return *this;
 }
 
-template<Access_policy Policy>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator*=(const Memory_register<Policy>& rhs) const {
-    get_reference() *= rhs.get_reference();
-    return *this;
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator/=(const T& rhs) const {
+inline const Memory_register<P>& Memory_register<P>::operator/=(const T& rhs) const {
     get_reference() /= rhs;
     return *this;
 }
 
-template<Access_policy Policy>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator/=(const Memory_register<Policy>& rhs) const {
-    get_reference() /= rhs.get_reference();
-    return *this;
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator%=(const T& rhs) const {
+inline const Memory_register<P>& Memory_register<P>::operator%=(const T& rhs) const {
     get_reference() %= rhs;
     return *this;
 }
 
-template<Access_policy Policy>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator%=(const Memory_register<Policy>& rhs) const {
-    get_reference() %= rhs.get_reference();
-    return *this;
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator&=(const T& rhs) const {
+inline const Memory_register<P>& Memory_register<P>::operator&=(const T& rhs) const {
     get_reference() &= rhs;
     return *this;
 }
 
-template<Access_policy Policy>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator&=(const Memory_register<Policy>& rhs) const {
-    get_reference() &= rhs.get_reference();
-    return *this;
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator|=(const T& rhs) const {
+inline const Memory_register<P>& Memory_register<P>::operator|=(const T& rhs) const {
     get_reference() |= rhs;
     return *this;
 }
 
-template<Access_policy Policy>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator|=(const Memory_register<Policy>& rhs) const {
-    get_reference() |= rhs.get_reference();
-    return *this;
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator^=(const T& rhs) const {
+inline const Memory_register<P>& Memory_register<P>::operator^=(const T& rhs) const {
     get_reference() ^= rhs;
     return *this;
 }
 
-template<Access_policy Policy>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator^=(const Memory_register<Policy>& rhs) const {
-    get_reference() ^= rhs.get_reference();
-    return *this;
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator<<=(const T& rhs) const {
+inline const Memory_register<P>& Memory_register<P>::operator<<=(const T& rhs) const {
     get_reference() <<= rhs;
     return *this;
 }
 
-template<Access_policy Policy>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator<<=(const Memory_register<Policy>& rhs) const {
-    get_reference() <<= rhs.get_reference();
-    return *this;
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator>>=(const T& rhs) const {
+inline const Memory_register<P>& Memory_register<P>::operator>>=(const T& rhs) const {
     get_reference() >>= rhs;
     return *this;
 }
 
-template<Access_policy Policy>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator>>=(const Memory_register<Policy>& rhs) const {
-    get_reference() >>= rhs.get_reference();
-    return *this;
-}
-
-template<Access_policy Policy>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator++() const {
+template<Access_policy P>
+inline const Memory_register<P>& Memory_register<P>::operator++() const {
     get_reference() += 1;
     return *this;
 }
 
-template<Access_policy Policy>
-inline const Memory_register<Policy>& Memory_register<Policy>::operator--() const {
+template<Access_policy P>
+inline const Memory_register<P>& Memory_register<P>::operator--() const {
     get_reference() -= 1;
     return *this;
 }
 
-template<Access_policy Policy>
-inline uint32_t Memory_register<Policy>::operator++(int) const {
+template<Access_policy P>
+inline uint32_t Memory_register<P>::operator++(int) const {
     uint32_t temp = get_reference();
     get_reference() += 1;
     return temp;
 }
 
-template<Access_policy Policy>
-inline uint32_t Memory_register<Policy>::operator--(int) const {
+template<Access_policy P>
+inline uint32_t Memory_register<P>::operator--(int) const {
     uint32_t temp = get_reference();
     get_reference() -= 1;
     return temp;
 }
 
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline uint32_t Memory_register<Policy>::operator+(const T& rhs) const {
+inline uint32_t Memory_register<P>::operator+(const T& rhs) const {
     return get_reference() + rhs;
 }
 
-template<Access_policy Policy>
-inline uint32_t Memory_register<Policy>::operator+(const Memory_register<Policy>& rhs) const {
-    return get_reference() + rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline uint32_t Memory_register<Policy>::operator-(const T& rhs) const {
+inline uint32_t Memory_register<P>::operator-(const T& rhs) const {
     return get_reference() - rhs;
 }
 
-template<Access_policy Policy>
-inline uint32_t Memory_register<Policy>::operator-(const Memory_register<Policy>& rhs) const {
-    return get_reference() - rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline uint32_t Memory_register<Policy>::operator*(const T& rhs) const {
+inline uint32_t Memory_register<P>::operator*(const T& rhs) const {
     return get_reference() * rhs;
 }
 
-template<Access_policy Policy>
-inline uint32_t Memory_register<Policy>::operator*(const Memory_register<Policy>& rhs) const {
-    return get_reference() * rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline uint32_t Memory_register<Policy>::operator/(const T& rhs) const {
+inline uint32_t Memory_register<P>::operator/(const T& rhs) const {
     return get_reference() / rhs;
 }
 
-template<Access_policy Policy>
-inline uint32_t Memory_register<Policy>::operator/(const Memory_register<Policy>& rhs) const {
-    return get_reference() / rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline uint32_t Memory_register<Policy>::operator%(const T& rhs) const {
+inline uint32_t Memory_register<P>::operator%(const T& rhs) const {
     return get_reference() % rhs;
 }
 
-template<Access_policy Policy>
-inline uint32_t Memory_register<Policy>::operator%(const Memory_register<Policy>& rhs) const {
-    return get_reference() % rhs.get_reference();
-}
-
-template<Access_policy Policy>
-inline uint32_t Memory_register<Policy>::operator~() const {
+template<Access_policy P>
+inline uint32_t Memory_register<P>::operator~() const {
     return ~get_reference();
 }
 
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline uint32_t Memory_register<Policy>::operator&(const T& rhs) const {
+inline uint32_t Memory_register<P>::operator&(const T& rhs) const {
     return get_reference() & rhs;
 }
 
-template<Access_policy Policy>
-inline uint32_t Memory_register<Policy>::operator&(const Memory_register<Policy>& rhs) const {
-    return get_reference() & rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline uint32_t Memory_register<Policy>::operator|(const T& rhs) const {
+inline uint32_t Memory_register<P>::operator|(const T& rhs) const {
     return get_reference() | rhs;
 }
 
-template<Access_policy Policy>
-inline uint32_t Memory_register<Policy>::operator|(const Memory_register<Policy>& rhs) const {
-    return get_reference() | rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline uint32_t Memory_register<Policy>::operator^(const T& rhs) const {
+inline uint32_t Memory_register<P>::operator^(const T& rhs) const {
     return get_reference() ^ rhs;
 }
 
-template<Access_policy Policy>
-inline uint32_t Memory_register<Policy>::operator^(const Memory_register<Policy>& rhs) const {
-    return get_reference() ^ rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline uint32_t Memory_register<Policy>::operator<<(const T& rhs) const {
+inline uint32_t Memory_register<P>::operator<<(const T& rhs) const {
     return get_reference() << rhs;
 }
 
-template<Access_policy Policy>
-inline uint32_t Memory_register<Policy>::operator<<(const Memory_register<Policy>& rhs) const {
-    return get_reference() << rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline uint32_t Memory_register<Policy>::operator>>(const T& rhs) const {
+inline uint32_t Memory_register<P>::operator>>(const T& rhs) const {
     return get_reference() >> rhs;
 }
 
-template<Access_policy Policy>
-inline uint32_t Memory_register<Policy>::operator>>(const Memory_register<Policy>& rhs) const {
-    return get_reference() >> rhs.get_reference();
-}
-
-template<Access_policy Policy>
-inline bool Memory_register<Policy>::operator!() const {
+template<Access_policy P>
+inline bool Memory_register<P>::operator!() const {
     return !get_reference();
 }
 
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline bool Memory_register<Policy>::operator&&(const T& rhs) const {
+inline bool Memory_register<P>::operator&&(const T& rhs) const {
     return get_reference() && rhs;
 }
 
-template<Access_policy Policy>
-inline bool Memory_register<Policy>::operator&&(const Memory_register<Policy>& rhs) const {
-    return get_reference() && rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline bool Memory_register<Policy>::operator||(const T& rhs) const {
+inline bool Memory_register<P>::operator||(const T& rhs) const {
     return get_reference() || rhs;
 }
 
-template<Access_policy Policy>
-inline bool Memory_register<Policy>::operator||(const Memory_register<Policy>& rhs) const {
-    return get_reference() || rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline bool Memory_register<Policy>::operator==(const T& rhs) const {
+inline bool Memory_register<P>::operator==(const T& rhs) const {
     return get_reference() == rhs;
 }
 
-template<Access_policy Policy>
-inline bool Memory_register<Policy>::operator==(const Memory_register<Policy>& rhs) const {
-    return get_reference() == rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline bool Memory_register<Policy>::operator!=(const T& rhs) const {
+inline bool Memory_register<P>::operator!=(const T& rhs) const {
     return get_reference() != rhs;
 }
 
-template<Access_policy Policy>
-inline bool Memory_register<Policy>::operator!=(const Memory_register<Policy>& rhs) const {
-    return get_reference() != rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline bool Memory_register<Policy>::operator<(const T& rhs) const {
+inline bool Memory_register<P>::operator<(const T& rhs) const {
     return get_reference() < rhs;
 }
 
-template<Access_policy Policy>
-inline bool Memory_register<Policy>::operator<(const Memory_register<Policy>& rhs) const {
-    return get_reference() < rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline bool Memory_register<Policy>::operator>(const T& rhs) const {
+inline bool Memory_register<P>::operator>(const T& rhs) const {
     return get_reference() > rhs;
 }
 
-template<Access_policy Policy>
-inline bool Memory_register<Policy>::operator>(const Memory_register<Policy>& rhs) const {
-    return get_reference() > rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline bool Memory_register<Policy>::operator<=(const T& rhs) const {
+inline bool Memory_register<P>::operator<=(const T& rhs) const {
     return get_reference() <= rhs;
 }
 
-template<Access_policy Policy>
-inline bool Memory_register<Policy>::operator<=(const Memory_register<Policy>& rhs) const {
-    return get_reference() <= rhs.get_reference();
-}
-
-template<Access_policy Policy>
+template<Access_policy P>
 template<typename T>
-inline bool Memory_register<Policy>::operator>=(const T& rhs) const {
+inline bool Memory_register<P>::operator>=(const T& rhs) const {
     return get_reference() >= rhs;
 }
 
-template<Access_policy Policy>
-inline bool Memory_register<Policy>::operator>=(const Memory_register<Policy>& rhs) const {
-    return get_reference() >= rhs.get_reference();
-}
-
-template<Access_policy Policy>
-inline volatile uint32_t* Memory_register<Policy>::get_pointer() const {
+template<Access_policy P>
+inline volatile uint32_t* Memory_register<P>::get_pointer() const {
     return reinterpret_cast<volatile uint32_t *>(address);
 }
 
-template<Access_policy Policy>
-inline volatile uint32_t& Memory_register<Policy>::get_reference() const {
+template<Access_policy P>
+inline volatile uint32_t& Memory_register<P>::get_reference() const {
     return *get_pointer();
 }
 

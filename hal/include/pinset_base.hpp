@@ -131,17 +131,17 @@ constexpr Pin_base<T>::Pin_base(const T& pinset, const uint8_t& pin_nr) :
 
 template<class T>
 void Pin_base<T>::config(const Config& config) const {
-    pinset.Impl_config_pin(pin_nr, config);
+    pinset.config_pin_(pin_nr, config);
 }
 
 template<class T>
 void Pin_base<T>::set(const State& state) const {
-    pinset.Impl_set_pin_state(pin_nr, state);
+    pinset.set_pin_state_(pin_nr, state);
 }
 
 template<class T>
 typename Pin_base<T>::State Pin_base<T>::get() const {
-    return pinset.Impl_get_pin_state(pin_nr);
+    return pinset.get_pin_state_(pin_nr);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -150,7 +150,7 @@ typename Pin_base<T>::State Pin_base<T>::get() const {
 
 template<class T>
 void Pinset_base<T>::initialize() const {
-    derived().Impl_initialize();
+    derived().initialize_();
 }
 
 template<class T>

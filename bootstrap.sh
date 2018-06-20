@@ -1,5 +1,4 @@
 #! /bin/bash
-# -*- mode: sh-mode -*-
 #==============================================================================#
 # File:     bootstrap.sh
 # Author:   Tom Verloop   <T93.Verloop@gmail.com>
@@ -60,6 +59,21 @@ done
 # Apply positional arguments.
 set -- "${POSITIONAL[@]}"
 
+
+function index_rdm() {
+    if [ -z "$(ps aux | grep -m 1 '[r]dm' | awk '{print $2}')" ]; then
+        rdm &
+        local RDM_PID=$!
+        sleep .5
+    fi
+
+    rc -J .
+
+    if [ ! -z "$RDM_PID"]; then
+        kill ${RDM_PID}
+    fi
+}
+
 # If build dir does not exist create it.
 if [ ! -d ${BUILD_DIR} ]; then
     mkdir ${BUILD_DIR}
@@ -72,14 +86,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=toolchains/${TOOLCHAIN} \
       -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
       ..
 
-rdm &
-RDM_PID=$!
-
-sleep .5
-
-rc -J .
-
-kill ${RDM_PID}
+index_rdm
 
 # Move out of build directory.
 cd ..

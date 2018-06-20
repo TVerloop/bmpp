@@ -1,4 +1,4 @@
-/* -*- mode: c++-mode */
+/* -*- mode: c++ -*- */
 /**
    @file main.cpp
    @author T. Verloop <t93.verloop@gmail.com>

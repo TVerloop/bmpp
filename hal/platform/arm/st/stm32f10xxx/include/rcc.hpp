@@ -6,8 +6,8 @@
  * @brief Reset and clock control.
  */
 
-#ifndef EMB_HAL_STM32F10XXX_RCC_HPP__
-#define EMB_HAL_STM32F10XXX_RCC_HPP__
+#ifndef BMPP_HAL_STM32F10XXX_RCC_HPP__
+#define BMPP_HAL_STM32F10XXX_RCC_HPP__
 
 /* System. */
 #include <cstdint>                      /* Fixed size integers. */
@@ -43,8 +43,9 @@ public:
         bdcr      {base_address, 0x20},
         csr       {base_address, 0x24} {}
 
-    void enable_gpio(uint8_t port_nr) const;
-    void disable_gpio(uint8_t port_nr) const;
+    void set_clock(const uint32_t & hz) const;
+    void enable_gpio(const uint8_t & port_nr) const;
+    void disable_gpio(const uint8_t & port_nr) const;
 
 private:
 
@@ -70,4 +71,4 @@ constexpr stm32f10xxx::Rcc rcc;
 } /* namespace bmpp */
     
 
-#endif /* EMB_HAL_STM32F10XXX_RCC_HPP__ */
+#endif /* BMPP_HAL_STM32F10XXX_RCC_HPP__ */
