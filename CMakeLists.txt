@@ -1,4 +1,4 @@
-# -*- mode:CMake -*-
+# -*- mode: CMake -*-
 #==============================================================================#
 # File:     CMakeLists.txt
 # Author:   Tom Verloop   <T93.Verloop@gmail.com>

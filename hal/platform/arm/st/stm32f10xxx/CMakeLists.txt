@@ -12,6 +12,21 @@
 if(CORTEX_M3_AVAILABLE)
 
 #==============================================================================#
+# Properties.
+#==============================================================================#
+
+#------------------------------------------------------------------------------#
+# Main stack size.
+#------------------------------------------------------------------------------#
+
+define_property(TARGET
+    PROPERTY
+        STM32F10xxx_EXT_CLK
+    BRIEF_DOCS "Clock speed of external oscilator."
+    FULL_DOCS  "Clock speed of external oscilator in Hertz."
+)
+
+#==============================================================================#
 # STM32f10xxx
 #==============================================================================#
 
@@ -32,6 +47,7 @@ if(CORTEX_M3_AVAILABLE)
       ${CMAKE_CURRENT_SOURCE_DIR}/source/rcc.cpp
       ${CMAKE_CURRENT_SOURCE_DIR}/source/startup.cpp
       ${CMAKE_CURRENT_SOURCE_DIR}/source/interrupts.cpp
+      ${CMAKE_CURRENT_SOURCE_DIR}/source/flash.cpp
   )
 
 #------------------------------------------------------------------------------#
@@ -60,6 +76,7 @@ if(CORTEX_M3_AVAILABLE)
   target_compile_definitions(__STM32F10XXX
     INTERFACE
       STM32F10XXX=1
+      EXTCLK=$<TARGET_PROPERTY:STM32F10xxx_EXT_CLK>
   )
 
 #------------------------------------------------------------------------------#

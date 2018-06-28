@@ -22,12 +22,14 @@ namespace hal {
 namespace stm32f10xxx {
 
 extern "C" {
-    void default_handler() {
-        while(1) {
-            __asm__("BKPT");
-        }
+
+void default_handler() {
+    while(1) {
+        __asm__("BKPT");
     }
 }
+
+}  /* extern "C" */
 
 [[gnu::interrupt("IRQ"), gnu::alias("default_handler")]]
 static void reserved_handler();

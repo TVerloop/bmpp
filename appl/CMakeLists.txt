@@ -60,6 +60,8 @@ if(CORTEX_M3_AVAILABLE)
         1k
       CORTEX_M3_PROCESS_STACK_SIZE
         0
+      STM32F10xxx_EXT_CLK
+        8'000'000
   )
 
   # include directories.

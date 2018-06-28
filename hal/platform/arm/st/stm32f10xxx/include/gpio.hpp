@@ -1,58 +1,110 @@
+/* -*- mode: c++ -*- */
+/**
+ * @file    gpio.hpp
+ * @author  T. Verloop <t93.verloop@gmail.com>
+ * @version 0.1
+ * @date    04-06-2018
+ * @brief   General purpose Input/Output.
+ */
+
 #ifndef BMPP_HAL_STM32F10XXX_GPIO_HPP__
 #define BMPP_HAL_STM32F10XXX_GPIO_HPP__
 
-#include <array>
+/* System. */
+#include <cstdint>
 
-#include "pinset_base.hpp"
+/* Third-party, */
+
+/* Local. */
 #include "mem_access.hpp"
+#include "pinset_base.hpp"
 
 namespace bmpp {
 
 namespace hal {
 
 namespace stm32f10xxx {
-  
+
 class Gpio : public Pinset_base<Gpio> {
 public:
-
-    friend Pinset_base<Gpio>;
-    friend Pin_base<Gpio>;
 
     static const uint32_t base_address = 0x4001'0800UL;
     static const uint32_t block_size = 0x400UL;
 
-    constexpr Gpio(const uint32_t & address);
+    explicit constexpr Gpio(const uint32_t& address);
+
+    void initialize() const;
+    void set_pin_state(const uint8_t& pin, const Pin::State& state) const;
+    void config_pin(const uint8_t& pin, const Pin::Config& config) const;
+    Pin::State get_pin_state(const uint8_t& pin) const;
+    uint32_t get_identifier() const;
 
 private:
 
-    void initialize_() const;
-    void set_pin_state_(const uint8_t& pin, const Pin::State& state) const;
-    void config_pin_(const uint8_t& pin, const Pin::Config& config) const;
-    Pin::State get_pin_state_(const uint8_t& pin) const;
-    uint32_t get_identifier_() const;
-
-    Memory_register<Access_policy::read_write> crl;
-    Memory_register<Access_policy::read_write> crh;
-    Memory_register<Access_policy::read_only>  idr;
-    Memory_register<Access_policy::read_write> odr;
-    Memory_register<Access_policy::write_only> bsrr;
-    Memory_register<Access_policy::write_only> brr;
-    Memory_register<Access_policy::read_write> lckr;
+    static const uint32_t pin_count = 15UL;
 
     const uint32_t address;
 
-    static const uint32_t pin_count = 15UL;
+    /**
+     *  Port configuration register low.
+     *  Address offset: 0x00
+     *  Reset value   : 0x4444'4444
+     */
+    Memory_register<Access_policy::read_write> crl;
+
+    /**
+     *  Port configuration register high.
+     *  Address offset: 0x04
+     *  Reset value   : 0x4444'4444
+     */
+    Memory_register<Access_policy::read_write> crh;
+
+    /**
+     *  Port input data register.
+     *  Address offset: 0x08
+     *  Reset value:    0x0000'XXXX
+     */
+    Memory_register<Access_policy::read_only> idr;
+
+    /**
+     *  Port output data register.
+     *  Address offset: 0x0C
+     *  Reset value:    0x0000'0000
+     */
+    Memory_register<Access_policy::read_write> odr;
+
+    /**
+     *  Port bit set/reset register.
+     *  Address offset: 0x10
+     *  Reset value:    0x0000'0000
+     */
+    Memory_register<Access_policy::write_only> bsrr;
+
+    /**
+     *  Port bit reset register.
+     *  Address offset: 0x14
+     *  Reset value:    0x0000'0000
+     */
+    Memory_register<Access_policy::write_only> brr;
+
+    /**
+     *  Port configuration lock register.
+     *  Address offset: 0x18
+     *  Reset value:    0x0000'0000
+     */
+    Memory_register<Access_policy::read_write> lckr;
+
 };
 
 constexpr Gpio::Gpio(const uint32_t & address) :
-    crl     (address, 0x00UL),
-    crh     (address, 0x04UL),
-    idr     (address, 0x08UL),
-    odr     (address, 0x0CUL),
-    bsrr    (address, 0x10UL),
-    brr     (address, 0x14UL),
-    lckr    (address, 0x18UL),
-    address (address) {
+    address (address),
+    crl     (address + 0x00UL),
+    crh     (address + 0x04UL),
+    idr     (address + 0x08UL),
+    odr     (address + 0x0CUL),
+    bsrr    (address + 0x10UL),
+    brr     (address + 0x14UL),
+    lckr    (address + 0x18UL) {
 
 }
 

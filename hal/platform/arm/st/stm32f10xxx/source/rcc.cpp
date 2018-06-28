@@ -1,4 +1,7 @@
+#include <array>
+
 #include "rcc.hpp"
+#include "flash.hpp"
 
 namespace bmpp {
 
@@ -8,6 +11,8 @@ namespace stm32f10xxx {
 
 void Rcc::set_clock(const uint32_t & hz) const {
 
+    (void) hz;
+
     /* Enable Clock security system. */
     /* Enable HSE. */
     cr |= ((1UL << 19UL) | (1UL << 16UL));
@@ -16,6 +21,10 @@ void Rcc::set_clock(const uint32_t & hz) const {
         /* Wait for HSE Ready. */
     }
 
+    /* HSE as pll clock source. */
+    /* Multiply by 6. */
+    cfgr |= ((1U << 16U) | (4U << 18U));
+
     /* Enable PLL */
     cr |= (1UL << 24UL);
 
@@ -23,8 +32,14 @@ void Rcc::set_clock(const uint32_t & hz) const {
         /* Wait for PLL Ready. */
     }
 
-    cfgr = masked_write(cfgr, 4UL, 3UL, 18UL);
+    /* Set flash latency to two wait states. */
+    flash.set_latency(2);
 
+    /* Set pll as main source. */
+    cfgr |= 2U;
+    while(!((cfgr & (3U << 2U)) & (2U << 2U))) {
+        /* Wait for system clock to switch source. */
+    }
 }
 
 void Rcc::enable_gpio(const uint8_t& port_nr) const {

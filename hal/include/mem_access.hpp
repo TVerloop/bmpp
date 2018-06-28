@@ -1,10 +1,10 @@
-/* -*- mode:C++ -*- */
+/* -*- mode: c++ -*- */
 /**
- * @file mem_access.hpp
- * @author T. Verloop <t93.verloop@gmail.com>
+ * @file    mem_access.hpp
+ * @author  T. Verloop <t93.verloop@gmail.com>
  * @version 0.1
- * @date 01-06-2018
- * @brief utilities for accessing io Memory.
+ * @date    01-06-2018
+ * @brief   utilities for accessing io Memory.
  */
 
 #ifndef BMPP_HAL_MEM_ACCESS_HPP__
@@ -12,12 +12,13 @@
 
 /* System. */
 #include <type_traits>      /* Compiletype type computation. */
-#include <cstdint>          /* Fixed size integers. */
+#include <cstdint>          /* Fixed size integers.          */
+#include <iterator>         /* Reverse iterator.             */
 
 /* Third-party. */
 
-/* Local. */
 
+/* Local. */
 
 namespace bmpp {
 
@@ -27,18 +28,18 @@ namespace hal {
  *  Describes the read/write acces policy.
  */
 enum class Access_policy {
-    read_only,                  /**< Read only access.      */
-    write_only,                 /**< Write only access.     */
-    read_write                  /**< Read and write access  */
+    read_only,  /**< Read only access.      */
+    write_only, /**< Write only access.     */
+    read_write  /**< Read and write access. */
 };
 
 /**
  * Writes a binary value masked by a given field and position.
- * @param[in] lhs       Left hand value.
- * @param[in] field     Bitfield used as mask.
- * @param[in] rhs       Right hand value.
- * @param[in] pos       Position used to shift field and rhs in place.
- * @return              Value of Lefthand value with righthand bitpatern overwritten.
+ * @param[in] lhs   Left hand value.
+ * @param[in] field Bitfield used as mask.
+ * @param[in] rhs   Right hand value.
+ * @param[in] pos   Position used to shift field and rhs in place.
+ * @return          Value of Lefthand value with righthand bitpatern overwritten.
  */
 inline uint32_t masked_write(const uint32_t lhs, const uint32_t& field, const uint32_t rhs, const uint32_t& pos) {
     return ((lhs & ~(field << pos)) | ((rhs & field) << pos));
@@ -51,6 +52,64 @@ constexpr uint32_t create_mask(const std::size_t& size) {
         return 1UL | (create_mask(size - 1UL) << 1UL);
     }
 }
+
+template<typename T>
+class Array_wrapper {
+public:
+
+    using value_type = T;
+    using size_type = std::size_t;
+    using difference_type = std::ptrdiff_t;
+    using reference = value_type&;
+    using const_reference = const value_type&;
+    using pointer = value_type*;
+    using const_pointer = const value_type*;
+    using iterator  = value_type*;
+    using const_iterator = const value_type*;
+    using reverse_iterator = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+    constexpr Array_wrapper(const iterator begin, const iterator end);
+
+/******************************************************************************/
+/* Element access.                                                            */
+/******************************************************************************/
+
+    constexpr reference at(size_type pos) const;
+    constexpr reference operator[](size_type pos) const;
+    constexpr reference front() const;
+    constexpr reference back() const;
+    constexpr pointer data() const;
+
+/******************************************************************************/
+/* Iterators.                                                                 */
+/******************************************************************************/
+
+    constexpr iterator begin() const;
+    constexpr iterator cbegin() const;
+
+    constexpr iterator end() const;
+    constexpr iterator cend() const;
+
+    constexpr iterator rbegin() const;
+    constexpr iterator crbegin() const;
+
+    constexpr iterator rend() const;
+    constexpr iterator crend() const;
+
+/******************************************************************************/
+/* Capacity.                                                                  */
+/******************************************************************************/
+
+    constexpr bool empty() const;
+    constexpr size_type size() const;
+    constexpr size_type max_size() const;
+
+private:
+    iterator const begin_;
+    iterator const end_;
+
+};
 
 /**
  *  wrapper class for staticaly mapped Memory access.
@@ -66,39 +125,32 @@ public:
      */
     explicit constexpr Memory_register(uint32_t address);
 
-    /**
-     *  Constructor from 32bits integer with aditional offset.
-     *  @param[in] base_addess   Integer base address in which the Memory resides.
-     *  @param[in] offset        Offset from the base address in which the Memory resides.
-     */
-    constexpr Memory_register(uint32_t base_address, uint32_t offset);
-
 /*****************************************************************************/
 /* Assignment operators                                                      */
 /*****************************************************************************/
-  
-    /** 
+
+    /**
      *  Assignment operator.
-     *  @tparam      T   Type of righthand value.
-     *  @param[in]   rhs righthand value.
-     *  @return          Reference to lefthand value.
+     *  @tparam     T   Type of righthand value.
+     *  @param[in]  rhs righthand value.
+     *  @return         Reference to lefthand value.
      */
     template<typename T>
     inline const Memory_register& operator=(const T& rhs) const;
 
     /**
      *  Add and assign operator.
-     *  @tparam      T   Type of righthand value.
-     *  @param[in]   rhs Righthand value.
-     *  @return          Reference to lefthand value.
+     *  @tparam     T   Type of righthand value.
+     *  @param[in]  rhs Righthand value.
+     *  @return         Reference to lefthand value.
      */
     template<typename T>
     inline const Memory_register& operator+=(const T& rhs) const;
     /**
      *  Substract and assign operator.
-     *  @tparam      T   Type of righthand value.
-     *  @param[in]   rhs Righthand value.
-     *  @return          Reference to lefthand value.
+     *  @tparam     T   Type of righthand value.
+     *  @param[in]  rhs Righthand value.
+     *  @return         Reference to lefthand value.
      */
     template<typename T>
     inline const Memory_register& operator-=(const T& rhs) const;
@@ -193,13 +245,13 @@ public:
 
     /**
      *  Post-Increment operator.
-     *  @return        Lefthand value before increment.
+     *  @return         Lefthand value before increment.
      */
     inline uint32_t operator++(int) const;
 
     /**
      *  Post-Decrement operator.
-     *  @return        Righthand value before increment.
+     *  @return         Righthand value before increment.
      */
     inline uint32_t operator--(int) const;
 
@@ -397,7 +449,7 @@ public:
      *  Address-of operator.
      *  @return         Pointer to memory register.
      */
-    inline volatile uint32_t * operator&() const {
+    inline volatile uint32_t* operator&() const {
         return get_pointer();
     }
 
@@ -435,18 +487,106 @@ private:
 /* Definitions.                                                               */
 /******************************************************************************/
 
+/*----------------------------------------------------------------------------*/
+/* Class Array_wrapper                                                        */
+/*----------------------------------------------------------------------------*/
+
+template<typename T>
+constexpr Array_wrapper<T>::Array_wrapper(const iterator begin, const iterator end) :
+    begin_(begin),
+    end_(end) {
+
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::reference Array_wrapper<T>::at(size_type pos) const {
+    return *begin_[pos];
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::reference Array_wrapper<T>::operator[](size_type pos) const {
+    return *begin_[pos];
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::reference Array_wrapper<T>::front() const {
+    return *begin_;
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::reference Array_wrapper<T>::back() const {
+    return *(end_ - 1);
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::pointer Array_wrapper<T>::data() const {
+    return begin_;
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::iterator Array_wrapper<T>::begin() const{
+    return begin_;
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::iterator Array_wrapper<T>::cbegin() const {
+    return begin_;
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::iterator Array_wrapper<T>::end() const {
+    return end_;
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::iterator Array_wrapper<T>::cend() const {
+    return end_;
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::iterator Array_wrapper<T>::rbegin() const {
+    return reverse_iterator(end_);
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::iterator Array_wrapper<T>::crbegin() const {
+    return reverse_iterator(end_);
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::iterator Array_wrapper<T>::rend() const {
+    return reverse_iterator(begin_);
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::iterator Array_wrapper<T>::crend() const {
+    return reverse_iterator(begin_);
+}
+
+template<typename T>
+constexpr bool Array_wrapper<T>::empty() const {
+    return (end_ - begin_);
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::size_type Array_wrapper<T>::size() const {
+    return (end_ - begin_);
+}
+
+template<typename T>
+constexpr typename Array_wrapper<T>::size_type Array_wrapper<T>::max_size() const {
+    return size();
+}
+
+/*----------------------------------------------------------------------------*/
+/* Class Memory_register                                                      */
+/*----------------------------------------------------------------------------*/
+
 template<Access_policy P>
 constexpr Memory_register<P>::Memory_register(uint32_t address)
     : address { address } {
 
 }
-
-template<Access_policy P>
-constexpr Memory_register<P>::Memory_register(uint32_t base_address, uint32_t offset)
-    : address { base_address + offset } {
-
-}
-
 
 template<Access_policy P>
 template<typename T>

@@ -1,10 +1,10 @@
-/* -*- mode:C++ -*- */
+/* -*- mode: c++ -*- */
 /**
- * @file pinset_base.hpp
- * @author T. Verloop <t93.verloop@gmail.com>
+ * @file    pinset_base.hpp
+ * @author  T. Verloop <t93.verloop@gmail.com>
  * @version 0.1
- * @date 01-06-2018
- * @brief General purpose I/O peripheral access interface.
+ * @date    01-06-2018
+ * @brief   General purpose I/O peripheral access interface.
  */
 
 #ifndef BMPP_HAL_PINSET_BASE_HPP__
@@ -46,38 +46,43 @@ public:
      *  Pin state.
      */
     enum class State {
-        high = 1,           /**< Pin is in high state.  */
-        low = 0             /**< Pin is in low state.   */
+        high = 1,   /**< Pin is in high state.  */
+        low  = 0    /**< Pin is in low state.   */
     };
 
     /**
      *  Constructor.
      *  @param[in]  pinset  Pinset of which this pin belongs to.
      *  @param[in]  pin_nr  The pin number which this pin is in the set.
+     *  @return None.
      */
     constexpr Pin_base(const Pinset_impl & pinset, const uint8_t& pin_nr);
 
     /**
      *  Configures pin for given configuration.
      *  @param[in]  config  Configuration to be set for this pin.
+     *  @return None.
      */
     void config(const Config& config) const;
 
     /**
      *  sets the state of the pin.
      *  @param[in]  state   The state to set the pin in.
+     *  @return None.
      **/
     void set(const State& state) const;
 
     /**
      *  returns the current state of the pin.
-     *  return  The pin state.
+     *  @return The pin state.
      */
     State get() const;
 
 private:
-    const Pinset_impl & pinset;     /**< Reference to the Pinset.   */
-    const uint8_t pin_nr;           /**< Pin number in the set.     */
+
+    const Pinset_impl& pinset;  /**< Reference to the Pinset.   */
+    const uint8_t      pin_nr;  /**< Pin number in the set.     */
+
 };
 
 /**
@@ -95,23 +100,30 @@ public:
 
     /**
      *  Initializes the pinset.
+     *  @return None.
      */
     void initialize() const;
 
     /**
      *  returns a pin object for a given pin number.
      *  @param[in]  pin Number of the pin to return.
+     *  @return         Instance of the pin.
      */
     constexpr Pin get_pin(const uint8_t& pin) const;
 
     /**
      *  returns a pin object for a given pin number.
      *  @param[in]  pin Number of the pin to return.
+     *  @return         Instance of the pin.
      */
     constexpr Pin operator[](const std::size_t& pin) const;
 
 private:
 
+    /**
+     *  returns a reference to the derived class.
+     *  @return         Reference to the derived class.
+     */
     constexpr const Pinset_impl& derived() const;
 
 };
@@ -131,17 +143,17 @@ constexpr Pin_base<T>::Pin_base(const T& pinset, const uint8_t& pin_nr) :
 
 template<class T>
 void Pin_base<T>::config(const Config& config) const {
-    pinset.config_pin_(pin_nr, config);
+    pinset.config_pin(pin_nr, config);
 }
 
 template<class T>
 void Pin_base<T>::set(const State& state) const {
-    pinset.set_pin_state_(pin_nr, state);
+    pinset.set_pin_state(pin_nr, state);
 }
 
 template<class T>
 typename Pin_base<T>::State Pin_base<T>::get() const {
-    return pinset.get_pin_state_(pin_nr);
+    return pinset.get_pin_state(pin_nr);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -150,7 +162,7 @@ typename Pin_base<T>::State Pin_base<T>::get() const {
 
 template<class T>
 void Pinset_base<T>::initialize() const {
-    derived().initialize_();
+    derived().initialize();
 }
 
 template<class T>

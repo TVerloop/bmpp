@@ -7,15 +7,15 @@ namespace hal {
 
 namespace stm32f10xxx {
 
-void Gpio::initialize_() const {
+void Gpio::initialize() const {
     rcc.enable_gpio((address - Gpio::base_address) / Gpio::block_size);
 }
 
-void Gpio::set_pin_state_(const uint8_t& pin, const Pin::State& state) const {
+void Gpio::set_pin_state(const uint8_t& pin, const Pin::State& state) const {
     odr = masked_write(odr, 1UL, static_cast<uint32_t>(state), pin);
 }
 
-void Gpio::config_pin_(const uint8_t& pin, const Pin::Config& config) const {
+void Gpio::config_pin(const uint8_t& pin, const Pin::Config& config) const {
     volatile uint32_t & cfg_reg = pin > 7UL ? crh : crl;
     uint8_t pin_nr = pin % 8UL;
     switch(config) {
@@ -37,11 +37,11 @@ void Gpio::config_pin_(const uint8_t& pin, const Pin::Config& config) const {
     }
 }
 
-Pin::State Gpio::get_pin_state_(const uint8_t& pin) const {
+Pin::State Gpio::get_pin_state(const uint8_t& pin) const {
     return static_cast<Pin::State>((idr >> pin) & 1U);
 }
 
-uint32_t Gpio::get_identifier_() const {
+uint32_t Gpio::get_identifier() const {
     return (address - Gpio::base_address) / Gpio::block_size;
 }
 

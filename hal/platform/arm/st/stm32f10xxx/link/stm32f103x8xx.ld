@@ -60,7 +60,8 @@ SECTIONS {
         __text_start = .;
         PROVIDE(__text_start = __text_start);
         . = ALIGN(4);
-        KEEP(*(.vectors));
+        *(.vectors .vectors.*);
+        KEEP(*(.vectors .vectors.*));
         . = ALIGN(4);
         *(.text .text.* .gnu.linkonce.t.*);
         . = ALIGN(4);
